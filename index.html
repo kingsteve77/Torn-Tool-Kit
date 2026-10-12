@@ -1,0 +1,234 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1c1c1c"><title>Torn Player Toolkit</title>
+<style>
+:root{--bg:#1c1c1c;--p:#2e2e2e;--ln:#161616;--tx:#e6e6e6;--mu:#9a9a9a;--g:#8bc34a;--r:#e8532c;--lb:#7db7ee;--y:#d6c243}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.35 Arial,Helvetica,sans-serif;padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+a{color:var(--lb);text-decoration:none}
+.top{display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top));background:linear-gradient(#2c2c2c,#202020);border-bottom:2px solid #0e0e0e}
+.logo{font:900 26px Impact,'Arial Black',sans-serif;letter-spacing:1px;color:#cfcfcf;background:linear-gradient(#5a5a5a,#383838);padding:1px 12px;text-shadow:0 2px #000;border-radius:3px}
+#who{flex:1;min-width:0;font-size:13px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#who b{color:var(--tx)}
+.ib{background:linear-gradient(#555,#3a3a3a);border:1px solid #666;color:#eee;border-radius:5px;padding:8px 12px;font:700 15px Arial;cursor:pointer}
+.bars{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:10px;background:#262626}
+.bar{font-size:13px;text-align:center;white-space:nowrap}.bar i{display:block;height:4px;background:#8c8c8c;margin-top:5px;position:relative}.bar i b{position:absolute;left:0;top:0;bottom:0}
+.mrow{display:flex;gap:16px;align-items:center;padding:10px 12px;background:#222;border-top:1px solid #111;border-bottom:1px solid #111;font-size:20px;overflow:hidden}
+.mrow span{white-space:nowrap}.mrow .m{color:var(--g)}.mrow .p{color:var(--lb)}.mrow .st{margin-left:auto;font-size:12px;font-weight:700;padding:5px 9px;border-radius:4px;background:#3a3a3a}
+nav{display:flex;background:#222;border-bottom:2px solid #0e0e0e;position:sticky;top:0;z-index:5}
+nav button{flex:1;background:none;border:0;color:var(--mu);padding:8px 2px;font:700 10px Arial;text-transform:uppercase;cursor:pointer}nav button b{display:block;font-size:20px;filter:grayscale(1);margin-bottom:2px}
+nav button.on{color:#fff;background:#3b3b3b;box-shadow:inset 0 -3px var(--g)}nav button.on b{filter:none}
+.pane{display:none}.pane.on{display:block}
+.card{margin:12px 8px 0;border-radius:6px;overflow:hidden;background:var(--p);border:1px solid #3a3a3a}
+.card>h2{margin:0;padding:14px 16px;font-size:20px;background:linear-gradient(#505050,#363636);display:flex;justify-content:space-between;cursor:pointer;user-select:none}
+.card>h2:after{content:'▾';color:#aaa}.card.c>h2:after{content:'▸'}.card.c>*:not(h2){display:none}
+.r{display:flex;border-top:2px solid var(--ln);background:#303030}.r>div{padding:13px 16px;min-width:0}
+.r .l{flex:0 0 46%;font-weight:700;font-size:17px;border-right:2px solid var(--ln)}.r .v{flex:1;overflow-wrap:anywhere}
+.r .n{text-align:right;color:var(--g);font-size:18px}.r .md{flex:0 0 22%;text-align:center;color:var(--r);font-size:18px;border-left:2px solid var(--ln)}.r .md.up{color:var(--g)}
+.pad{padding:14px 16px}.mu{color:var(--mu);font-size:13px}.big{font:900 26px Arial;letter-spacing:.5px}.g{color:var(--g)}.rd{color:var(--r)}.y{color:var(--y)}
+.badge{display:inline-block;padding:6px 12px;border-radius:4px;font-weight:900;font-size:14px;background:#444}.badge.g{background:#2f5d1c;color:#cfe}.badge.rd{background:#6b2413;color:#fdd}.badge.y{background:#5d5216;color:#ffe}
+.sb{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--ln)}.sb>div{padding:14px 12px;text-align:center;background:#303030}.sb>div+div{border-left:2px solid var(--ln)}.sb .big{display:block;margin-top:4px}
+.prog{height:8px;background:#1a1a1a;margin:10px 16px 4px;border-radius:4px;overflow:hidden;display:flex}.prog b{display:block;height:100%}
+input,select{background:#1f1f1f;color:#eee;border:1px solid #555;border-radius:5px;padding:12px;font:16px Arial;width:100%}
+.btn{background:linear-gradient(#8bd45c,#65a83e);border:1px solid #5b9c39;color:#101010;font:800 15px Arial;padding:12px 14px;border-radius:5px;cursor:pointer}.btn.s{background:linear-gradient(#555,#393939);border-color:#666;color:#eee}
+.row{display:flex;gap:8px;padding:0 16px 14px}.row>*{flex:1;min-width:0}.fl{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px}.fl label{font-size:11px;color:var(--mu);text-transform:uppercase;display:block;margin-bottom:4px}
+.msg{margin:10px 8px 0;padding:11px 14px;background:#252525;border:1px solid #444;border-radius:5px;color:#c5c5c5;font-size:13px;overflow-wrap:anywhere}.msg.e{border-color:#7b3a2a;color:#ffd0c4}
+.it{border-top:2px solid var(--ln);background:#303030;padding:11px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}.it .a{min-width:0}.it strong{display:block}.it .z{text-align:right;white-space:nowrap}
+.ch{padding:9px 16px;background:#3a3a3a;font-weight:700;border-top:2px solid var(--ln);display:flex;justify-content:space-between}
+.seg{display:flex;gap:6px;padding:10px 16px;border-top:2px solid var(--ln);background:#303030}.seg button{flex:1;background:#3a3a3a;border:1px solid #555;color:var(--mu);border-radius:5px;padding:9px 4px;font:700 12px Arial;cursor:pointer}.seg button.on{background:#2f5d1c;border-color:#4a8a2e;color:#fff}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font:800 11px Arial;background:#444;margin-left:4px;vertical-align:middle}.tag.g{background:#2f5d1c;color:#cfe}.tag.rd{background:#6b2413;color:#fdd}.tag.y{background:#5d5216;color:#ffe}
+.bt{height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden;margin-top:6px}.bt b{display:block;height:100%;background:var(--g)}
+.btn.d{background:linear-gradient(#555,#393939);border-color:#666;color:#bbb}
+.tos{width:100%;border-collapse:collapse;font-size:13px}.tos td{padding:9px 12px;border-top:2px solid var(--ln);vertical-align:top;background:#303030}.tos td:first-child{font-weight:700;width:34%;background:#383838}
+.cr{margin:22px 8px 0;padding:16px 12px;text-align:center;background:linear-gradient(#2c2c2c,#202020);border:1px solid #3a3a3a;border-radius:6px;font-size:13px;color:var(--mu)}.cr b{display:block;font:900 18px Impact,'Arial Black',sans-serif;letter-spacing:1px;color:var(--g);margin:4px 0}.cr .sub{color:#cfcfcf}
+</style></head><body>
+<header class="top"><div class="logo">TORN</div><div id="who">Player Toolkit</div><button class="ib" id="ref" title="Refresh">↻</button></header>
+<div class="bars" id="bars"></div><div class="mrow" id="mrow"></div>
+<nav id="nav"><button data-t="home"><b>🏠</b>Home</button><button data-t="war"><b>⚔️</b>War</button><button data-t="travel"><b>✈️</b>Travel</button><button data-t="stats"><b>🏋️</b>Gym</button><button data-t="key"><b>🔑</b>Key</button></nav>
+<div id="msg" class="msg">Paste your Torn API key in the Key tab to begin.</div>
+<main>
+<section class="pane" id="home"></section><section class="pane" id="war"></section><section class="pane" id="travel"></section><section class="pane" id="stats"></section>
+<section class="pane" id="key"><div class="card"><h2>API Key</h2><div class="pad mu">Everything loads automatically once a key is saved. Your key stays in this browser only and is sent only to api.torn.com. Create a <b>Limited Access</b> key in Torn → Settings → API Keys (needed for battle stats and attacks).</div>
+<div class="pad" style="padding-top:0"><b>Terms of use (Torn API ToS)</b></div>
+<table class="tos"><tr><td>Data storage</td><td>Only locally. Your key, a history of your battle stats and your settings stay in this browser. Nothing is stored on a server.</td></tr><tr><td>Data sharing</td><td>Nobody</td></tr><tr><td>Purpose of use</td><td>Personal use. Only you can see the data.</td></tr><tr><td>Key storage &amp; sharing</td><td>Stored locally / not shared. Sent only to api.torn.com.</td></tr><tr><td>Key access level</td><td>Limited Access. Selections used: user (profile, bars, travel, battlestats, money, networth, attacks), faction (rankedwars, basic), torn (items).</td></tr></table>
+<div class="pad mu">Read-only: the tool never acts for you. The Attack buttons only open Torn in a new tab and you click everything yourself. Requests are tagged <b>PlayerToolkit</b> in your Torn key log. Unofficial tool, not affiliated with Torn.<br><br>Foreign stock prices come from <a href="https://yata.yt" target="_blank" rel="noopener">YATA</a>, <a href="https://prombot.co.uk" target="_blank" rel="noopener">Prometheus</a> and, as a fallback, the <a href="https://allorigins.win" target="_blank" rel="noopener">allorigins</a> relay. No key or player data is sent to them. Their own terms apply.</div>
+<div class="row"><input id="k" type="text" name="tornkey" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-form-type="other" placeholder="Paste your 16-character API key"></div>
+<div class="row"><button class="btn" id="save">Save &amp; load</button><button class="btn s" id="forget">Forget key</button></div></div></section>
+</main>
+<footer class="cr"><span>Made by</span><b>👑 <a href="https://www.torn.com/profiles.php?XID=3804804" target="_blank" rel="noopener" style="color:inherit">King_Steve_ [3804804]</a></b><span class="sub">Chetty Chetty Bang Bang member</span><br><span>For details or help, message <a href="https://www.torn.com/profiles.php?XID=3804804" target="_blank" rel="noopener">King_Steve_ [3804804]</a> in Torn</span></footer>
+<script>
+const $=s=>document.querySelector(s),E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const N=n=>Number(n||0).toLocaleString('en-US'),D=n=>'$'+N(n),LS=localStorage;
+const CN={mex:'Mexico',cay:'Cayman Islands',can:'Canada',haw:'Hawaii',uk:'United Kingdom',arg:'Argentina',swi:'Switzerland',jap:'Japan',chi:'China',uae:'UAE',sou:'South Africa'};
+const FT={mex:26,cay:35,can:41,haw:134,uk:159,arg:167,swi:175,jap:225,chi:242,uae:271,sou:297};
+const YATA='https://yata.yt/api/v1/travel/export/',PROM='https://api.prombot.co.uk/api/travel';
+let K=LS.tk_key||'',S={},W=null,items=null,stock=null,tab='home',busy=false,perr=[],pause=0,lastLoad=0;
+const msg=(t,e)=>{const m=$('#msg');m.textContent=t;m.className='msg'+(e?' e':'');m.style.display=t?'':'none'};
+const hm=s=>{s=Math.floor(s);const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return(d?d+'d ':'')+(h||d?h+'h ':'')+m+'m '+String(s%60).padStart(2,'0')+'s'};
+const ft=m=>Math.floor(m/60)+'h '+m%60+'m';
+const cd=u=>`<b data-u="${u}"></b>`;
+const row=(l,v,c='')=>`<div class="r"><div class="l">${l}</div><div class="v ${c}">${v}</div></div>`;
+async function api(p,sel,x={}){const u=new URL('https://api.torn.com/'+p+'/');u.searchParams.set('selections',sel);u.searchParams.set('key',K);u.searchParams.set('comment','PlayerToolkit');for(const k in x)u.searchParams.set(k,x[k]);const r=await fetch(u),j=await r.json();if(j.error)throw Object.assign(Error(j.error.error),{code:j.error.code});return j}
+async function jget(u){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
+function go(t){tab=t;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id===t));if(t==='travel'&&(!stock||Date.now()-stock.t>120000))loadStock();scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+document.addEventListener('click',e=>{const h=e.target.closest('.card>h2');if(h)h.parentNode.classList.toggle('c')});
+
+/* ---------- load ---------- */
+async function load(){
+ if(!K||busy||Date.now()<pause||Date.now()-lastLoad<15000)return;busy=true;lastLoad=Date.now();$('#ref').textContent='…';
+ const ids=['profile','bars','travel','battlestats','money','networth','attacks'];
+ let res;try{const p=await api('user','profile');res=[{status:'fulfilled',value:p},...await Promise.allSettled(ids.slice(1).map(s=>api('user',s)))]}catch(e){res=[{status:'rejected',reason:e}]}perr=[];
+ res.forEach((r,i)=>{if(r.status==='fulfilled')Object.assign(S,r.value);else perr.push(ids[i]+' ('+r.reason.message+')')});
+ const bad=res[0].status==='rejected'?res[0].reason:null;
+ if(bad){busy=false;$('#ref').textContent='↻';
+  if([1,2,10,13,18].includes(bad.code)){K='';LS.removeItem('tk_key');$('#k').value='';msg('Key removed from this browser so it is not retried ('+bad.message+'). Paste a valid key to continue.',1);go('key');return}
+  if([5,8].includes(bad.code)){pause=Date.now()+3e5;msg('Torn is rate-limiting this connection ('+bad.message+'). Pausing for 5 minutes.',1);return}
+  msg('Could not load: '+bad.message,1);return}
+ try{await loadWar()}catch(e){W={err:e.message}}
+ snap();render();
+ msg(perr.length?'Loaded with limits — key lacks access to: '+perr.join(', ')+'. Use a Limited Access key for full data.':'',perr.length>0);
+ busy=false;$('#ref').textContent='↻';
+ if(tab==='key')go('home');
+ getItems().then(()=>{if(tab==='travel')renderTravel()});
+}
+async function loadWar(){
+ const f=S.faction;if(!f||!+f.faction_id){W={none:1};return}
+ const d=await api('faction/'+f.faction_id,'rankedwars'),all=Object.values(d.rankedwars||{}).sort((a,b)=>b.war.start-a.war.start);
+ const now=Date.now()/1e3,cur=all.filter(x=>!+x.war.end).pop()||null,last=all.find(x=>+x.war.end)||null;
+ W={cur,last,me:String(f.faction_id)};
+ if(cur){W.enemy=Object.keys(cur.factions).find(i=>i!==W.me);W.active=cur.war.start<=now;
+  const b=await api('faction/'+W.enemy,'basic').catch(()=>({members:{}}));W.mem=Object.entries(b.members||{}).map(([id,v])=>({id,...v}))}
+}
+function mine(w,e){const me=S.player_id,ok=['Attacked','Mugged','Hospitalized','Special'],min=+LS.tk_min||0;let o={hits:0,resp:0,low:0,lost:0,recv:0};
+ Object.values(S.attacks||{}).forEach(a=>{if((a.timestamp_ended||a.timestamp_started)<w.start)return;
+  if(a.attacker_id==me&&a.defender_faction==e){if(ok.includes(a.result)){const r=+(a.respect_gain||a.respect||0);o.hits++;o.resp+=r;if(min&&r<min)o.low++}else o.lost++}
+  else if(a.defender_id==me&&a.attacker_faction==e)o.recv++});return o}
+function snap(){const t=['strength','defense','speed','dexterity'];if(S.strength==null)return;let h=[];try{h=JSON.parse(LS.tk_hist||'[]')}catch{}
+ const n={t:Date.now(),s:+S.strength,d:+S.defense,sp:+S.speed,dx:+S.dexterity},l=h[h.length-1];
+ if(!l||l.s!==n.s||l.d!==n.d||l.sp!==n.sp||l.dx!==n.dx){h.push(n);LS.tk_hist=JSON.stringify(h.slice(-80))}}
+
+/* ---------- render ---------- */
+function render(){renderTop();renderHome();renderWar();renderTravel();renderStats();tick()}
+function trav(){const T=S.travel&&typeof S.travel==='object'?S.travel:S,st=S.status||{},now=Date.now()/1e3,arr=+T.timestamp||0,desc=st.description||'';
+ const flying=arr>now||st.state==='Traveling',dest=T.destination&&T.destination!=='Torn'?T.destination:((desc.match(/(?:to|in)\s+(.+?)\s*$/i)||[])[1]||'');
+ const ret=/returning/i.test(desc)||T.destination==='Torn'&&flying,abroad=!flying&&(st.state==='Abroad'||(T.destination&&T.destination!=='Torn'));
+ return{flying,abroad,ret,arr,place:ret?'Torn':(T.destination&&T.destination!=='Torn'?T.destination:dest),desc,state:flying?(ret?'RETURNING TO TORN':'TRAVELLING'):abroad?'ABROAD':'IN TORN'}}
+function renderTop(){
+ $('#who').innerHTML=`<b>${E(S.name||'')}</b> [${E(S.player_id||'')}] · ${E(S.status?.description||'')}`;
+ const b=(k,c,lab)=>{const v=S[k]||{},cur=+v.current||0,mx=+v.maximum||0;return`<div class="bar">${lab}${cur}${k==='happy'?'':'/'+mx}<i><b style="width:${mx?Math.min(100,cur/mx*100):0}%;background:${c}"></b></i></div>`};
+ const ch=S.chain||{};
+ $('#bars').innerHTML=b('energy','#6cb33f','⚡ ')+b('nerve','#c4472a','☀ ')+b('happy','#c9b63b','☺ ')+b('life','#4a54d6','♥ ')+`<div class="bar">⛓ ${+ch.current||0}/${+ch.maximum||10}<i><b style="width:${ch.maximum?Math.min(100,ch.current/ch.maximum*100):0}%;background:#bbb"></b></i></div>`;
+ const t=trav(),cls=t.flying?'y':t.abroad?'y':'g';
+ $('#mrow').innerHTML=`<span class="m">$ ${N(S.money_onhand)}</span><span class="p">P ${N(S.points)}</span><span class="st ${cls}">${t.state}</span>`}
+function renderHome(){
+ const mod=k=>{let m=+S[k+'_modifier'];if(!m)return'<div class="md" style="visibility:hidden">–</div>';if(!Number.isInteger(m)&&Math.abs(m)<3)m=Math.round((m-1)*100);return`<div class="md ${m>0?'up':''}">${m>0?'+':'−'}${Math.abs(m)}%</div>`};
+ const bs=[['Strength','strength'],['Defense','defense'],['Speed','speed'],['Dexterity','dexterity']].map(([l,k])=>`<div class="r"><div class="l">${l}</div><div class="v n">${N(S[k])}</div>${mod(k)}</div>`).join('');
+ const tot=S.total||['strength','defense','speed','dexterity'].reduce((a,k)=>a+(+S[k]||0),0),f=S.faction||{},m=S.married||{},t=trav();
+ const mar=m.spouse_name?`Married to <a href="https://www.torn.com/profiles.php?XID=${+m.spouse_id}" target="_blank" rel="noopener">${E(m.spouse_name)}</a> for ${N(m.duration)} days`:'Single';
+ const lf=S.life||{};
+ $('#home').innerHTML=`<div class="card"><h2>Battle Stats</h2>${S.strength==null?'<div class="pad mu">Battle stats need a Limited Access key.</div>':bs+`<div class="r"><div class="l">Total</div><div class="v n" style="color:var(--tx)">${N(tot)}</div><div class="md" style="visibility:hidden">–</div></div>`}</div>
+ <div class="card"><h2>General Information</h2>${row('Name',`<a href="https://www.torn.com/profiles.php?XID=${S.player_id}" target="_blank" rel="noopener">${E(S.name)} [${S.player_id}]</a>`)}${row('Money',D(S.money_onhand))}${row('Points',N(S.points))}${row('Level',S.level)}${row('Rank',E(S.rank))}${row('Life',N(lf.current)+' / '+N(lf.maximum))}${row('Age',N(S.age))}${row('Marital status',mar)}${row('Networth',S.networth?.total!=null?D(S.networth.total):'—')}${row('Faction',f.faction_name?E(f.faction_name)+(f.position?' · '+E(f.position):''):'None')}${row('Status',E(S.status?.description||'—')+(S.status?.until>Date.now()/1e3?' · '+cd(S.status.until):''))}${row('Last action',E(S.last_action?.relative||'—'))}</div>`}
+function renderWar(){
+ const el=$('#war');if(!W){el.innerHTML='';return}
+ if(W.err){el.innerHTML=`<div class="card"><h2>Faction war</h2><div class="pad rd">${E(W.err)}</div></div>`;return}
+ if(W.none){el.innerHTML=`<div class="card"><h2>Faction war</h2><div class="pad"><span class="badge">NO FACTION</span><p class="mu">You are not in a faction, so there is no war to track.</p></div></div>`;return}
+ const c=W.cur;let h='';
+ if(!c){h=`<div class="card"><h2>Faction war</h2><div class="pad"><span class="badge g">NO WAR</span><p class="mu">No ranked war is active or scheduled for your faction. This tab checks automatically every 30 seconds.</p></div></div>`;
+  if(W.last){const l=W.last,ids=Object.keys(l.factions),won=String(l.war.winner)===W.me;h+=`<div class="card c"><h2>Last war</h2>${ids.map(i=>row(E(l.factions[i].name),N(l.factions[i].score),'n')).join('')}${row('Result',l.war.winner?(won?'<span class="g">Won</span>':'<span class="rd">Lost</span>'):'—')}${row('Ended',new Date(l.war.end*1e3).toLocaleString())}</div>`}
+ }else{
+  const w=c.war,a=c.factions[W.me]||{},e=c.factions[W.enemy]||{};
+  if(!W.active){h=`<div class="card"><h2>Faction war</h2><div class="pad"><span class="badge y">WAR SCHEDULED</span><div class="big" style="margin:12px 0 4px">${cd(w.start)}</div><div class="mu">until the war with <b>${E(e.name)}</b> starts · ${new Date(w.start*1e3).toLocaleString()}</div></div>${row('Target score',N(w.target),'n')}</div>`}
+  else{const lead=a.score-e.score,tot=(a.score+e.score)||1,my=mine(w,W.enemy),min=+LS.tk_min||'';
+   h=`<div class="card"><h2>War score</h2><div class="pad"><span class="badge rd">WAR ACTIVE</span> <span class="mu">running ${cd(0).replace('data-u="0"',`data-s="${w.start}"`)}</span></div>
+   <div class="sb"><div><span class="mu">${E(a.name)}</span><span class="big g">${N(a.score)}</span><span class="mu">chain ${N(a.chain)}</span></div><div><span class="mu">${E(e.name)}</span><span class="big rd">${N(e.score)}</span><span class="mu">chain ${N(e.chain)}</span></div></div>
+   <div class="prog"><b style="width:${a.score/tot*100}%;background:#6cb33f"></b><b style="width:${e.score/tot*100}%;background:#c4472a"></b></div>
+   <div class="pad mu" style="padding-top:4px">${lead>=0?'<span class="g">Leading by '+N(lead)+'</span>':'<span class="rd">Behind by '+N(-lead)+'</span>'} · target ${N(w.target)}</div></div>
+   <div class="card"><h2>Your war activity</h2>${row('Hits on enemy',N(my.hits),'n')}${row('Respect from hits',my.resp.toFixed(2),'n')}${row('Below min respect',min?N(my.low):'set a minimum ↓','n')}${row('Failed attacks',N(my.lost),'n')}${row('Attacked by enemy',N(my.recv),'n')}
+   <div class="fl"><div><label>Min respect per hit</label><input id="min" inputmode="decimal" value="${min}" placeholder="e.g. 2.5"></div><div><label>&nbsp;</label><span class="mu">Counts your last 100 attacks since the war began.</span></div></div></div>`;
+}}
+ if(c&&W.mem&&W.mem.length)h+=enemyCard(c);
+ h+=attackLog();
+ el.innerHTML=h;const mi=$('#min');if(mi)mi.oninput=()=>{LS.tk_min=mi.value;renderWar();$('#min')?.focus()}}
+
+/* ---------- targets, attack log, gym advice ---------- */
+let AF=LS.tk_af||'all',TA=false;
+const OKR=['Attacked','Mugged','Hospitalized','Special'];
+const ago=t=>{const s=Date.now()/1e3-t;return s<3600?Math.max(1,Math.floor(s/60))+'m ago':s<86400?Math.floor(s/3600)+'h ago':Math.floor(s/86400)+'d ago'};
+const rgain=a=>+(a.respect_gain||a.respect||0);
+function hitMap(start){const me=S.player_id,m={};Object.values(S.attacks||{}).forEach(a=>{if(a.attacker_id==me&&OKR.includes(a.result)&&(a.timestamp_ended||a.timestamp_started)>=start)m[a.defender_id]=(m[a.defender_id]||0)+rgain(a)});return m}
+function enemyCard(c){
+ const e=c.factions[W.enemy]||{},hit=W.active?hitMap(c.war.start):{};
+ const rk=m=>({Okay:0,Hospital:1,Traveling:2,Abroad:2}[m.status?.state]??3);
+ const L=W.mem.slice().sort((x,y)=>rk(x)-rk(y)||y.level-x.level),st={};
+ L.forEach(m=>{const k=m.status?.state;st[k]=(st[k]||0)+1});
+ const rows=(TA?L:L.slice(0,25)).map(m=>{const s=m.status||{},ok=s.state==='Okay',h=hit[m.id];
+  const info=ok?'<span class="g">Okay</span>':s.state==='Hospital'?'<span class="rd">Hospital '+(s.until?cd(s.until):'')+'</span>':'<span class="y">'+E(s.state==='Traveling'||s.state==='Abroad'?(s.description||s.state):(s.state||'?'))+'</span>';
+  return `<div class="it"><div class="a"><strong>${E(m.name)}${h!=null?'<span class="tag g">HIT +'+h.toFixed(2)+'</span>':''}</strong><span class="mu">Lv ${m.level} · ${info} · ${E(m.last_action?.relative||'')}</span></div><a class="btn${ok?'':' d'}" href="https://www.torn.com/loader.php?sid=attack&user2ID=${m.id}" target="_blank" rel="noopener">Attack</a></div>`}).join('');
+ return `<div class="card"><h2>Targets: ${E(e.name)}</h2>${W.active?'':'<div class="pad"><span class="badge y">WAR NOT STARTED</span> <span class="mu">Here is who you will be hitting.</span></div>'}${row('Members',L.length+' · <span class="g">'+(st.Okay||0)+' okay</span> · <span class="rd">'+(st.Hospital||0)+' hospital</span> · '+((st.Traveling||0)+(st.Abroad||0))+' away')}<div class="ch"><span>Hit targets</span><span class="mu">attackable first, then by level</span></div>${rows}${L.length>25?'<div class="row" style="padding-top:12px"><button class="btn s" id="ta">'+(TA?'Show fewer':'Show all '+L.length)+'</button></div>':''}</div>`}
+function attackLog(){
+ const me=S.player_id,ws=W&&W.cur&&W.active?W.cur.war.start:0,tm=a=>a.timestamp_ended||a.timestamp_started;
+ const A=Object.values(S.attacks||{}).sort((a,b)=>tm(b)-tm(a));
+ if(!A.length)return '<div class="card"><h2>Attack log</h2><div class="pad mu">No attacks to show yet. Attack history needs a Limited Access key.</div></div>';
+ const g={h:0,r:0,t:0,l:0};
+ A.forEach(a=>{if(a.attacker_id==me){if(OKR.includes(a.result)){g.h++;g.r+=rgain(a)}}else if(a.defender_id==me){g.t++;g.l+=+(a.respect_loss||0)}});
+ const f=AF==='out'?A.filter(a=>a.attacker_id==me):AF==='in'?A.filter(a=>a.attacker_id!=me):(AF==='war'&&ws)?A.filter(a=>tm(a)>=ws):A;
+ const rows=f.slice(0,25).map(a=>{const out=a.attacker_id==me,nm=(out?a.defender_name:a.attacker_name)||'Someone',id=out?a.defender_id:a.attacker_id,r=String(a.result||''),win=OKR.includes(r);
+  const cl=out?(win?'g':r==='Lost'?'rd':'y'):(win?'rd':r==='Lost'?'g':'y'),lab=out?r.toUpperCase():win?'TAKEN: '+r.toUpperCase():r==='Lost'?'DEFENDED':r.toUpperCase();
+  const m=a.modifiers||{},ff=+(m.fair_fight||m.fairFight||0),loss=+(a.respect_loss||0);
+  const z=out?(win?`<span class="g">+${rgain(a).toFixed(2)}</span><br><span class="mu">respect</span>`:''):(win&&loss?`<span class="rd">−${loss.toFixed(2)}</span><br><span class="mu">respect lost</span>`:'');
+  return `<div class="it"><div class="a"><strong>${out?'⚔ ':'🛡 '}${id?`<a href="https://www.torn.com/profiles.php?XID=${+id}" target="_blank" rel="noopener">${E(nm)}</a>`:E(nm)} <span class="tag ${cl}">${E(lab)}</span></strong><span class="mu">${ago(tm(a))}${ff?' · FF '+ff.toFixed(2):''}${+a.chain?' · chain '+a.chain:''}${a.code?` · <a href="https://www.torn.com/loader.php?sid=attackLog&ID=${E(a.code)}" target="_blank" rel="noopener">damage log</a>`:''}</span></div><div class="z">${z}</div></div>`}).join('');
+ const sg=(k,l)=>`<button data-af="${k}" class="${AF===k?'on':''}">${l}</button>`;
+ return `<div class="card"><h2>Attack log</h2><div class="sb"><div><span class="mu">Hits made</span><span class="big g">${N(g.h)}</span><span class="mu">+${g.r.toFixed(2)} respect</span></div><div><span class="mu">Hits taken</span><span class="big rd">${N(g.t)}</span><span class="mu">${g.l?'−'+g.l.toFixed(2)+' respect':'last '+A.length+' attacks'}</span></div></div><div class="seg">${sg('all','All')}${sg('out','Made')}${sg('in','Taken')}${ws?sg('war','This war'):''}</div>${rows||'<div class="pad mu">Nothing in this filter.</div>'}<div class="pad mu">Torn's API does not send damage numbers, so tap <b>damage log</b> on any row to see them on Torn.</div></div>`}
+function gymAdvice(){
+ const B={bal:[25,25,25,25],off:[35,15,35,15],def:[15,35,15,35]},BN={bal:'Balanced',off:'Offensive (Str + Spd)',def:'Defensive (Def + Dex)'};
+ const k=B[LS.tk_build]?LS.tk_build:'bal',t=B[k],ks=[['Strength','strength'],['Defense','defense'],['Speed','speed'],['Dexterity','dexterity']];
+ const cur=ks.map(x=>+S[x[1]]||0),tot=cur.reduce((a,b)=>a+b,0);
+ const sel=`<div class="fl"><div style="grid-column:1/3"><label>Target build</label><select id="gb">${Object.keys(B).map(x=>`<option value="${x}"${x===k?' selected':''}>${BN[x]} · ${B[x].join('/')}</option>`).join('')}</select></div></div>`;
+ if(!tot)return `<div class="card"><h2>Where to improve</h2><div class="pad mu">Battle stats need a Limited Access key.</div></div>`;
+ let h=[];try{h=JSON.parse(LS.tk_hist||'[]')}catch{}
+ const f=h[0],base=Math.max(...cur.map((c,i)=>c/t[i])),keys=['s','d','sp','dx'];
+ const R=ks.map((x,i)=>({n:x[0],c:cur[i],sh:cur[i]/tot*100,t:t[i],need:Math.max(0,Math.round(t[i]*base-cur[i])),gain:f&&h.length>1?cur[i]-f[keys[i]]:null})).sort((a,b)=>b.need-a.need);
+ const top=R[0];
+ return `<div class="card"><h2>Where to improve</h2>${sel}<div class="pad" style="padding-top:0">${top.need?`<span class="badge y">TRAIN NEXT</span><div class="big" style="margin:10px 0 2px">${top.n}</div><div class="mu">${top.sh.toFixed(1)}% of your total, target ${top.t}%. About <b>${N(top.need)}</b> more to match this build.</div>`:'<span class="badge g">ON TARGET</span><div class="mu" style="margin-top:8px">Your stats already match this build.</div>'}</div>${R.map((x,i)=>`<div class="it"><div class="a" style="flex:1"><strong>${x.n}${i===0&&x.need?'<span class="tag y">LOWEST</span>':''}</strong><span class="mu">${x.sh.toFixed(1)}% now · target ${x.t}%${x.gain!=null?' · '+(x.gain>0?'+'+N(x.gain)+' since first snapshot':'no growth yet'):''}</span><div class="bt"><b style="width:${Math.min(100,x.sh/x.t*100)}%;background:${x.need?'var(--y)':'var(--g)'}"></b></div></div><div class="z">${x.need?'<span class="y">+'+N(x.need)+'</span>':'<span class="g">✔</span>'}</div></div>`).join('')}<div class="pad mu">Need = how much to add to that stat so the ratios hit the target without raising anything else.</div></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-af]');if(b){AF=b.dataset.af;LS.tk_af=AF;renderWar();tick();return}if(e.target.id==='ta'){TA=!TA;renderWar();tick()}});
+document.addEventListener('change',e=>{if(e.target.id==='gb'){LS.tk_build=e.target.value;renderStats()}});
+async function getItems(){if(items)return;try{items=(await api('torn','items')).items||{}}catch{items={}}}
+function parse(j){const o=j.stocks||j.countries||j,r=[];if(o&&typeof o==='object')for(const c in o){const v=o[c],a=Array.isArray(v)?v:(v&&(v.stocks||v.items))||[];a.forEach(i=>r.push({c:c.toLowerCase(),id:+i.id,name:i.name,q:+(i.quantity??i.qty??0),cost:+(i.cost??i.price??0),up:v&&v.update}))}return r.filter(x=>x.name&&FT[x.c])}
+async function loadStock(){
+ const src=[['YATA',()=>jget(YATA)],['YATA via relay',()=>jget('https://api.allorigins.win/raw?url='+encodeURIComponent(YATA))],['Prometheus',()=>jget(PROM)]];let err='';
+ for(const[n,f]of src){try{const rows=parse(await f());if(rows.length){stock={rows,src:n,t:Date.now()};break}}catch(e){err=n+': '+e.message}}
+ if(!stock)stock={rows:[],err,t:Date.now()};await getItems();renderTravel()}
+function renderTravel(){
+ const t=trav(),el=$('#travel');
+ let h=`<div class="card"><h2>My travel status</h2><div class="pad"><span class="badge ${t.flying||t.abroad?'y':'g'}">${t.state}</span>${t.flying||t.abroad?`<div class="big" style="margin:12px 0 2px">${E(t.place||'—')}</div>`:'<div class="mu" style="margin-top:10px">You are in Torn City and not travelling.</div>'}${t.flying&&t.arr?`<div class="mu">Arrives in ${cd(t.arr)}</div>`:''}</div></div>`;
+ if(!stock){el.innerHTML=h+'<div class="msg">Loading foreign stock…</div>';return}
+ if(!stock.rows.length){el.innerHTML=h+`<div class="card"><h2>Foreign stock</h2><div class="pad rd">Stock feeds unreachable${stock.err?' ('+E(stock.err)+')':''}.</div><div class="row"><button class="btn" id="rs">Retry</button></div></div>`;$('#rs').onclick=()=>{stock=null;loadStock()};return}
+ const cap=+LS.tk_cap||29,fc=LS.tk_fc||'all',ty=LS.tk_ty||'all',so=LS.tk_so||'pt',it=items||{};
+ let rows=stock.rows.map(x=>{const i=it[x.id]||{},mv=+i.market_value||0,pi=mv?mv-x.cost:null;return{...x,type:i.type||'Other',mv,pi,pt:pi==null?null:pi*Math.min(cap,x.q||cap)}});
+ const types=[...new Set(rows.map(r=>r.type))].sort();
+ rows=rows.filter(r=>(fc==='all'||r.c===fc)&&(ty==='all'||r.type===ty));
+ rows.sort((a,b)=>so==='q'?b.q-a.q:so==='c'?a.cost-b.cost:so==='pi'?(b.pi??-1e12)-(a.pi??-1e12):(b.pt??-1e12)-(a.pt??-1e12));
+ const op=(v,x,l)=>`<option value="${v}"${x===v?' selected':''}>${l}</option>`;
+ h+=`<div class="card"><h2>Foreign stock</h2><div class="fl"><div><label>Country</label><select id="fc">${op('all',fc,'All')}${Object.keys(CN).map(c=>op(c,fc,CN[c])).join('')}</select></div><div><label>Type</label><select id="ty">${op('all',ty,'All')}${types.map(c=>op(c,ty,c)).join('')}</select></div><div><label>Sort by</label><select id="so">${op('pt',so,'Profit / trip')}${op('pi',so,'Profit / item')}${op('q',so,'Quantity')}${op('c',so,'Price')}</select></div><div><label>Items per trip</label><input id="cap" inputmode="numeric" value="${cap}"></div></div>
+ <div class="ch"><span>${rows.length} items</span><span class="mu">${E(stock.src)} · ${Math.round((Date.now()-stock.t)/1000)}s ago</span></div>`;
+ h+=rows.slice(0,80).map(r=>`<div class="it"><div class="a"><strong>${E(r.name)}</strong><span class="mu">${CN[r.c]} · ✈ ${ft(FT[r.c])} · ${r.type}${r.up?' · seen '+Math.round((Date.now()/1e3-r.up)/60)+'m ago':''}</span></div><div class="z"><span class="${r.q?'':'rd'}">${N(r.q)} in stock</span><br><span class="mu">${D(r.cost)}${r.mv?' → '+D(r.mv):''}</span><br>${r.pi==null?'<span class="mu">no market value</span>':`<span class="${r.pi>0?'g':'rd'}">${r.pi>0?'+':'−'}${D(Math.abs(r.pi))}/item · ${r.pt>0?'+':'−'}${D(Math.abs(r.pt))}/trip</span>`}</div></div>`).join('')+'</div>';
+ el.innerHTML=h;
+ [['fc','tk_fc'],['ty','tk_ty'],['so','tk_so']].forEach(([i,k])=>$('#'+i).onchange=e=>{LS[k]=e.target.value;renderTravel()});
+ $('#cap').onchange=e=>{LS.tk_cap=Math.max(1,+e.target.value||29);renderTravel()}}
+function renderStats(){
+ let h=[];try{h=JSON.parse(LS.tk_hist||'[]')}catch{}
+ if(!h.length){$('#stats').innerHTML=gymAdvice()+'<div class="card"><h2>Gym progress</h2><div class="pad mu">No snapshots yet. Battle stats are recorded automatically every time they change.</div></div>';return}
+ const f=h[0],l=h[h.length-1],d=(a,b)=>{const x=a-b;return x?`<span class="${x>0?'g':'rd'}">${x>0?'+':'−'}${N(Math.abs(x))}</span>`:'<span class="mu">0</span>'};
+ const rows=[['Strength','s'],['Defense','d'],['Speed','sp'],['Dexterity','dx']].map(([n,k])=>row(n,`${N(l[k])} <span class="mu">since ${new Date(f.t).toLocaleDateString()}:</span> ${d(l[k],f[k])}`)).join('');
+ const tt=x=>x.s+x.d+x.sp+x.dx;
+ $('#stats').innerHTML=gymAdvice()+`<div class="card"><h2>Gym progress</h2>${rows}${row('Total',N(tt(l))+' '+d(tt(l),tt(f)))}</div><div class="card c"><h2>Snapshot history</h2>${h.slice().reverse().slice(0,30).map((x,i,a)=>{const p=a[i+1];return`<div class="it"><span class="mu">${new Date(x.t).toLocaleString()}</span><span>${N(tt(x))} ${p?d(tt(x),tt(p)):''}</span></div>`}).join('')}</div>`}
+function tick(){const n=Date.now()/1e3;document.querySelectorAll('[data-u]').forEach(e=>{const s=+e.dataset.u-n;e.textContent=s>0?hm(s):'now'});document.querySelectorAll('[data-s]').forEach(e=>e.textContent=hm(Math.max(0,n-+e.dataset.s)))}
+setInterval(tick,1000);
+setInterval(()=>{if(K&&!document.hidden)load()},30000);setInterval(()=>{if(K&&!document.hidden&&stock&&tab==='travel')loadStock()},120000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&K)load()});
+$('#ref').onclick=()=>{load();if(tab==='travel')loadStock()};
+function setKey(v){v=v.trim();if(!/^[A-Za-z0-9]{16}$/.test(v)){msg('A Torn API key is 16 letters and numbers.',1);return}K=v;LS.tk_key=v;lastLoad=0;pause=0;msg('Loading your data…');load()}
+$('#save').onclick=()=>setKey($('#k').value);
+$('#k').addEventListener('input',e=>{if(/^[A-Za-z0-9]{16}$/.test(e.target.value.trim()))setKey(e.target.value)});
+$('#forget').onclick=()=>{K='';LS.removeItem('tk_key');S={};W=null;$('#k').value='';renderTop();['home','war','travel','stats'].forEach(i=>$('#'+i).innerHTML='');msg('Key removed from this browser.')};
+renderTop();
+if(K){$('#k').value=K;go('home');msg('Loading your data…');load();loadStock()}else go('key');
+</script></body></html>
